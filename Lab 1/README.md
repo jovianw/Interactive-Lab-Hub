@@ -4,7 +4,7 @@ _This project is to be done in teams of 2._
 
 **Jovian Wang and Viktor Radev**
 
-**THE MASTERWORK YOU DREW FROM THE HAT:**
+**THE MASTERWORK YOU DREW FROM THE HAT: Beacon chains/Medieval Warning lights**
 
 ---
 
@@ -46,6 +46,8 @@ To start, you will need:
    format a README [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 4. **Draw your masterwork from the hat and write it at the top of this file.**
    Whatever you drew is yours — lean into it.
+
+   Drew "The Beacon Chain" -- Ancient/medieval warning fires.
 
 ## Materials
 
@@ -92,6 +94,10 @@ the interaction*:
 **Describe your masterwork here, in your own words. What is the core interaction
 someone would recognize it by?**
 
+I drew the "Beacon Chain" -- Ancient/medieval warning fires. Someone would initiate the system by lighting their own fire; the firelight would be seen by the next link in the chain, who responds to the input by lighting their own fire. This process continues until the people receiving the message see the lighting of the final link. The person initiating the warning and the people receiving the warning are present in the system, as well as those maintaining the system. The warning fire beacon chain sends a message between the initial and final people. This "piece" is famous for allow medieval cities receive early warnings of attacks across long distances, despite having only medieval-level technologies. Its strength is the ability to convey a message across far distances using a simple system. Its weakness is its medieval need of maintainers at every link, who must live in remote places and be constantly aware of its neighboring links. 
+
+However, for this replication, the core interaction someone would recognize this warning fire chain by is the iterative lighting across multiple links.
+
 ## Part A. Plan
 
 For your masterwork, reconstruct the interaction as a scene:
@@ -105,16 +111,23 @@ For your masterwork, reconstruct the interaction as a scene:
 
 **Describe your setting, players, activity, and goals here.**
 
+The setting happens across long landscapes, typically on high points across long mountain ranges at night. The initiator is involved, as well as people at every link in the chain, and finally the people receiving the message. The players receive a light and respond in kind by lighting their own. Each player is trying to make sure their link's light is up when a neighboring link's light is up.
+
 Now **sketch a 3 storyboards** of the interaction you are recreating. (The number may depend on the thing you drew, but stretch your thinking!) They
 don't need to be beautiful, but they must capture and communicate not only the behavior of the light, but how it affects
 and the people around it. If you're new to storyboarding, read
 [this explanation](https://www.nngroup.com/articles/storyboards-visualize-ideas/).
 
 **Include pictures of your storyboards here.**
+<img width="3024" height="4032" alt="IMG_3608" src="https://github.com/user-attachments/assets/99169c65-07a0-42c6-b956-6b7c34c1c738" />
+<img width="3024" height="4032" alt="IMG_3607" src="https://github.com/user-attachments/assets/5887f507-8071-44f4-9ec0-99fe3491f2d3" />
+<img width="3024" height="4032" alt="IMG_3606" src="https://github.com/user-attachments/assets/e3da5dd9-bc24-4ed0-941b-e497b6a44fdb" />
+
 
 Use the storyboards to decide what interaction to prototype.
 
 **Summarize the feedback you got here.**
+We should proceed with the interaction described in storyboard 1, where you shine a light on something acting as the next "link", and the light at the next link turns on.
 
 ## Part B. Act out the Interaction
 
@@ -124,9 +137,16 @@ it aloud.
 
 **Are there things that seemed better on paper than when acted out?**
 
+We would obviously need to translate "fires" into modern light devices. The easiest way to do this would to use a simple light like a phone flashlight. The timing needs to be on point -- a small pause between "lightings" is important for what we're trying to achieve.
+
 **Did new ideas about the piece surface once you were on your feet?**
 
+Make the link use a light on the opposite side of the sensor, so that it could theoretically point to a following link.
+
 **Are there key moments in the interaction where things could go in a different direction?**
+
+If the light is not bright enough to be detected by the next link, the next link is unable to determine when to turn on.
+
 Iterate your storyboards to capture key non-sequential aspects of the interaction. 
 
 ## Part C. Prototype the Light (light first!)
