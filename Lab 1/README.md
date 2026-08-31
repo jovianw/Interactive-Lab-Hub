@@ -174,6 +174,12 @@ video feed of whichever scene you want to capture.)
 
 **Include your first attempts at recording the wizarded set-up here.**
 
+
+
+https://github.com/user-attachments/assets/896ecda0-b689-4a2a-916d-62af497ffde5
+
+
+
 ## Part E. (optional) Costume the Device
 
 Only now should you worry about what the device looks like. Costume your phone so it reads
@@ -196,9 +202,22 @@ who doesn't should come away understanding what it's famous for. How might you i
 
 **Include your video here.**
 
+
+
+https://github.com/user-attachments/assets/87351740-721a-4646-99dc-f7df9995bda3
+
+
+
+
+
+
+
 **Please indicate who you collaborated with on this lab.** Be generous in
 acknowledging their contributions, and credit any other influences (YouTube,
 Github, Twitter, a friend who lent you a lamp) that informed your recreation.
+
+**Hong**: was the wizard, helped me control both the second phone and the computer
+**Viktor**: skit feedback, acting out
 
 ---
 
