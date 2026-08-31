@@ -174,6 +174,7 @@ video feed of whichever scene you want to capture.)
 
 **Include your first attempts at recording the wizarded set-up here.**
 
+https://github.com/user-attachments/assets/7445a3e4-b324-47f1-bb19-b963ac490225
 
 
 https://github.com/user-attachments/assets/896ecda0-b689-4a2a-916d-62af497ffde5
