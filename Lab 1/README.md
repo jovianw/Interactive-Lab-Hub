@@ -234,7 +234,19 @@ guess the masterwork and the goals of the characters, and ask about anything tha
 wasn't clear.
 
 **Who were the other groups you kibitzed with? Add links to their project pages here.**
+Yuqi: https://github.com/YuqiWang1106/Interactive-Lab-Hub/tree/Fall2026/Lab%201
+Alexa: https://github.com/alexa482/Interactive-Lab-Hub1/tree/Fall2026/Lab%201
+Hong: https://github.com/hongyuanc/Interactive-Lab-Hub
+
 **Summarize the feedback you got from your partners here.**
+Yuqi: Yuqi was able to easily guess the masterwork by the video. One thing that was not completely clear to him was what the different colors represented. He wondered if the red light had a specific meaning, such as indicating that the other person had picked up the frame, or whether it was showing a stronger level of interaction. I should add flickering, fire noises to help indicate what the light represents.
+
+Alexa: Likes the interaction! Wishes the first link (my wizard assistant) was under attack so the initial igniting has context. Also encourages me to use audio to enhance the experience.
+
+Hong: The beacon chain interaction was clear: one light triggers the next to carry a warning across a long distance. The timing between the lights worked well, but showing more links could make the chain and its scale even easier to understand.
+
+Alex (extra feedback!): The video shows a good visual interaction between how lighting one fire in the beacon causes a chain reaction of lights being illuminated. One thing that can be improved on is maybe the story board is showing a sky view of a chain of fires to better illustrate the chain effect.
+
 
 ## Remix, Update, or Critique the Master
 
@@ -256,6 +268,13 @@ your response engages with what your master was really doing.
 
 **Document everything here — especially the storyboard and video. Photos of the
 prototype are great too.**
+
+Remixing the modality/updating: Merging ideas with Viktor's Lumitouch masterpiece,
+changing the beacon links into picture frames that change appearance based on detected light.
+
+<img width="2386" height="1491" alt="Copy of Storyboard Lab01 Part B-7" src="https://github.com/user-attachments/assets/97d13edc-7efe-4c34-8e7a-45f79cfda13a" />
+<img width="2386" height="1491" alt="Copy of Storyboard Lab01 Part B-8" src="https://github.com/user-attachments/assets/1db7b126-51e0-4a39-afb3-bd555ac8b365" />
+
 
 ---
 
