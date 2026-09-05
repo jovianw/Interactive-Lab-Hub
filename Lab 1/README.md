@@ -276,6 +276,14 @@ changing the beacon links into picture frames that change appearance based on de
 <img width="2386" height="1491" alt="Copy of Storyboard Lab01 Part B-8" src="https://github.com/user-attachments/assets/1db7b126-51e0-4a39-afb3-bd555ac8b365" />
 
 
+
+
+https://github.com/user-attachments/assets/13500599-e6dc-4dab-b660-bd99693fbbb0
+
+https://github.com/user-attachments/assets/fef31b09-2fa1-4705-93b9-fe3283995d45
+
+
+
 ---
 
 
