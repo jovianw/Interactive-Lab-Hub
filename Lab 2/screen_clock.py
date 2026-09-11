@@ -60,12 +60,40 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
-while True:
-    # Draw a black filled box to clear the image.
-    draw.rectangle((0, 0, width, height), outline=0, fill=400)
+# plant clock: the plant sprouts at 6am, is fully grown with a flower by 10pm,
+# and wilts overnight. Stem height + leaf count = time of day.
+DEMO = True        # True: one full day every DEMO_SECONDS.  False: real time.
+DEMO_SECONDS = 12
 
-    #TODO: Lab 2 part D work should be filled in here. You should be able to look in cli_clock.py and stats.py 
+while True:
+    if DEMO:
+        # speed up
+        hour = 6 + 24 * (time.time() % DEMO_SECONDS) / DEMO_SECONDS
+    else:
+        now = time.localtime()
+        hour = now.tm_hour + now.tm_min / 60
+    day = max(0.0, min(1.0, (hour - 6) / 16))
+    night = hour >= 22 or hour < 6
+
+    # Draw a black filled box to clear the image.
+    draw.rectangle((0, 0, width, height), outline=0, fill=0)
+
+    # pot
+    draw.rectangle((100, 110, 140, 134), fill="#B5651D")
+    # stem grows from the pot rim toward the top of the screen
+    stem_top = 110 - int(90 * day)
+    green = "#556B2F" if night else "#2E8B57"
+    draw.line((120, 110, 120, stem_top), fill=green, width=4)
+    # one leaf per ~20% of the day, alternating sides; leaves droop at night
+    for i in range(int(day * 5)):
+        y = 110 - 18 * (i + 1) + (6 if night else 0)
+        side = 1 if i % 2 else -1
+        cx = 120 + side * 20
+        draw.ellipse((cx - 10, y - 6, cx + 10, y + 6), fill=green)
+    # flower once fully grown
+    if day >= 1.0:
+        draw.ellipse((110, stem_top - 10, 130, stem_top + 10), fill="#FF69B4")
 
     # Display image.
     disp.image(image, rotation)
-    time.sleep(1)
+    time.sleep(0.1 if DEMO else 60)
