@@ -198,6 +198,8 @@ We strongly discourage literal digital or analog clock display: Be creative.
 https://drive.google.com/file/d/1v8wJZIPKm8rEUAl3wzdgTO-FRkddWI47/view?usp=sharing
 
 **Put the names of the people you gave feedback to here. (Even better, add links to their repos here!)**
+Elliot: It would be helpful to determine the number of hours to a finer grain -- easiest for the user if each leaf is an hour.
+Alexa: It would be so cool if afternoon is the peak flower, and then animating it slowly wilt over the course of the evening to match the general energy of the course of the day.
 
 # Lab 2 Part 2
 
