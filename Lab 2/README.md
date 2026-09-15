@@ -198,8 +198,11 @@ We strongly discourage literal digital or analog clock display: Be creative.
 https://drive.google.com/file/d/1v8wJZIPKm8rEUAl3wzdgTO-FRkddWI47/view?usp=sharing
 
 **Put the names of the people you gave feedback to here. (Even better, add links to their repos here!)**
-Elliot: It would be helpful to determine the number of hours to a finer grain -- easiest for the user if each leaf is an hour.
-Alexa: It would be so cool if afternoon is the peak flower, and then animating it slowly wilt over the course of the evening to match the general energy of the course of the day.
+
+Elliot: https://github.com/elkalt/Interactive-Lab-Hub
+
+Alexa: https://github.com/alexa482/Interactive-Lab-Hub1
+
 
 # Lab 2 Part 2
 
@@ -209,6 +212,10 @@ Alexa: It would be so cool if afternoon is the peak flower, and then animating i
 
 2. Look at and give feedback on the Part E. for at least 3 other people in the class and get 3 people to comment on your Part E!)
 **Put the feedback for your ideas here.**
+
+Elliot: It would be helpful to determine the number of hours to a finer grain -- easiest for the user if each leaf is an hour.
+
+Alexa: It would be so cool if afternoon is the peak flower, and then animating it slowly wilt over the course of the evening to match the general energy of the course of the day.
 
 ## Update your Lab Hub
 
