@@ -60,39 +60,55 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
-# plant clock: the plant sprouts at 6am, is fully grown with a flower by 10pm,
-# and wilts overnight. Stem height + leaf count = time of day.
+# plant clock: grows one leaf per hour from midnight to noon (12 leaves, 6 per
+# side), flower opens 10am-noon, then it wilts and loses a leaf per hour back to
+# nothing at midnight. Leaves = hours from midnight (morning) or to midnight
+# (evening), rounded to the nearest hour.
 DEMO = True        # True: one full day every DEMO_SECONDS.  False: real time.
 DEMO_SECONDS = 12
+
+def mix(a, b, t):
+    # blend two RGB tuples, t = 0 (all a) .. 1 (all b)
+    return tuple(int(x + (y - x) * t) for x, y in zip(a, b))
 
 while True:
     if DEMO:
         # speed up
-        hour = 6 + 24 * (time.time() % DEMO_SECONDS) / DEMO_SECONDS
+        hour = 24 * (time.time() % DEMO_SECONDS) / DEMO_SECONDS
     else:
         now = time.localtime()
         hour = now.tm_hour + now.tm_min / 60
-    day = max(0.0, min(1.0, (hour - 6) / 16))
-    night = hour >= 22 or hour < 6
+    size = 12 - abs(hour - 12)                   # 0 at midnight, 12 at noon, 0 at midnight
+    leaves = int(size + 0.5)                     # one leaf per hour, rounded to the nearest hour
+    bloom = max(0.0, min(1.0, (hour - 10) / 2))  # flower opens 10am -> noon
+    wilt = max(0.0, min(1.0, (hour - 12) / 12))  # noon -> midnight
+
+    green = mix((46, 139, 87), (85, 107, 47), wilt)
+    pink = mix((255, 105, 180), (139, 90, 60), wilt)
 
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
     # pot
     draw.rectangle((100, 110, 140, 134), fill="#B5651D")
-    # stem grows from the pot rim toward the top of the screen
-    stem_top = 110 - int(90 * day)
-    green = "#556B2F" if night else "#2E8B57"
+    # stem: 8px per hour from the pot rim, smoothly up in the morning, down after noon
+    stem_top = 110 - int(8 * size)
     draw.line((120, 110, 120, stem_top), fill=green, width=4)
-    # one leaf per ~20% of the day, alternating sides; leaves droop at night
-    for i in range(int(day * 5)):
-        y = 110 - 18 * (i + 1) + (6 if night else 0)
-        side = 1 if i % 2 else -1
-        cx = 120 + side * 20
-        draw.ellipse((cx - 10, y - 6, cx + 10, y + 6), fill=green)
-    # flower once fully grown
-    if day >= 1.0:
-        draw.ellipse((110, stem_top - 10, 130, stem_top + 10), fill="#FF69B4")
+    # one leaf per hour, alternating sides (6 per side at noon), touching the
+    # stem; they droop as the plant wilts. Leaf n sits half a row below the
+    # stem tip when it appears at n-0.5 hours, so it's always attached.
+    for i in range(leaves):
+        y = 110 - 8 * (i + 1) + 4 + int(6 * wilt)
+        if i % 2:
+            draw.ellipse((122, y - 4, 142, y + 4), fill=green)  # right leaf
+        else:
+            draw.ellipse((98, y - 4, 118, y + 4), fill=green)   # left leaf
+    # flower on the stem tip: opens with bloom, shrinks and sags with wilt
+    r = int(10 * min(bloom, 1 - wilt))
+    if r > 0:
+        fx = 120 + int(3 * wilt)
+        fy = stem_top + int(6 * wilt)
+        draw.ellipse((fx - r, fy - r, fx + r, fy + r), fill=pink)
 
     # Display image.
     disp.image(image, rotation)
