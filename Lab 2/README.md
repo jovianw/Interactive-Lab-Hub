@@ -195,13 +195,14 @@ We strongly discourage literal digital or analog clock display: Be creative.
 ** Insert ideas, sketches, [Verplank diagrams](https://ccrma.stanford.edu/courses/250a-fall-2004/IDSketchbok.pdf)), storyboards for your ideas **
 
 <img width="3488" height="1984" alt="2026-09-11_18-04-47" src="https://github.com/user-attachments/assets/9e755172-d517-4018-9c0c-1b3374071c34" />
-https://drive.google.com/file/d/1v8wJZIPKm8rEUAl3wzdgTO-FRkddWI47/view?usp=sharing
 
 **Put the names of the people you gave feedback to here. (Even better, add links to their repos here!)**
 
 Elliot: https://github.com/elkalt/Interactive-Lab-Hub
 
 Alexa: https://github.com/alexa482/Interactive-Lab-Hub1
+
+Viktor: https://github.com/LaboriouslyExquisite/Interactive-Lab-Hub/blob/Fall2026/Lab%202/README.md
 
 
 # Lab 2 Part 2
@@ -217,6 +218,8 @@ Elliot: It would be helpful to determine the number of hours to a finer grain --
 
 Alexa: It would be so cool if afternoon is the peak flower, and then animating it slowly wilt over the course of the evening to match the general energy of the course of the day.
 
+Viktor: Very straightforward and uses the natural time of a plant growing and the movement of the sun to denote time passing! Something missing from the sketch is what happens to the plant when night time occurs? From the storyboard it just looks like the plant disappears and there is no moon or anything to indicate that it's night time. Perhaps adding the moon and stars would be a important feature to add to help show the user what time it is at night. Perhaps the number of petals says how many minutes have passed. There is a lot of things you can do. Overall very good design!
+
 ## Update your Lab Hub
 
 [Update your Lab Hub](pull_updates/README.md) to get the latest content and requirements for Part 2.
@@ -230,6 +233,8 @@ Start small, pick just one element of your overall idea, just to show you have a
 ## Make a short video of your modified barebones PiClock
 
 \*\*\***Take a video of your barely modified PiClock.**\*\*\*
+
+https://drive.google.com/file/d/1v8wJZIPKm8rEUAl3wzdgTO-FRkddWI47/view?usp=sharing
 
 After you edit and work on the scripts for Lab 2, the files should be upload back to your own GitHub repo! You can push to your personal github repo by adding the files here, commiting and pushing.
 
@@ -252,6 +257,7 @@ Do take advantage of having done the previous iteration to refine and simplify y
 
 \*\*\***Take a video of your PiClock.**\*\*\*
 
+https://drive.google.com/file/d/1PFmh4SQ0RxEOpwQA6gE71VnCLI5ZlhgD/view?usp=sharing
 
 As always, make sure you document contributions and ideas from others (and AI) explicitly in your writeup.
 
