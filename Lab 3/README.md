@@ -109,7 +109,11 @@ The demo script also shows `--output-raw`, which streams audio to the speaker as
 \*\***Write your own shell file to use your favorite of these TTS engines to have your Pi greet you by name.**\*\*
 (This shell file should be saved to your own repo for this lab.)
 
+See greeting.sh
+
 \*\***Then answer: Is the same greeting, in these different voices, the same greeting? Describe one concrete way the voice changed what the utterance seemed to mean or who seemed to be speaking.**\*\*
+
+The voices are the same greeting, but they feel different. The classic text to speech feels very robotic and old, since every word is uttered the same. However, the neural tts feels more natural, since it shapes the way it utters the words to the form of each sentence, making it feel more like a human speaking.
 
 ## B. Speech to Text
 
@@ -131,7 +135,11 @@ Available sizes, smallest first: `tiny.en`, `base.en`, `small.en`, `medium.en`. 
 
 \*\***Record a few seconds of your own speech (`arecord -d 5 -f cd -c 1 -r 16000 test.wav`) and transcribe it with at least two model sizes. Report the real-time factor for each. At what point does the accuracy improvement stop being worth the delay, for a system that has to answer you?**\*\*
 
+See test.wav. The real-time factor for tiny was 0.85, and the real-time factor for base was 1.36. From my current tests, even the tiny model was pretty accurate; however, later testing will show that the base model is definitely the best balance between delay and accuracy.
+
 \*\***Write your own script that verbally asks for a numerical input (a phone number, zipcode, number of pets) and records the answer the respondent provides.**\*\* Numbers are a good stress test — transcription systems make characteristic errors on digit strings, and you will want to know what they are before you design around them.
+
+See ask_number.py
 
 ## C. Turn-taking: knowing when someone has stopped talking
 
@@ -153,6 +161,8 @@ Speak, pause, and watch it transcribe. Now change the endpointing threshold — 
 
 \*\***Try both extremes, and something in between. Describe what each one feels like to talk to. Note specifically: at 0.2s, what kinds of normal speech get cut off? At 1.5s, what does the delay make the system seem like?**\*\*
 
+At 0.2s, normal pauses in sentences and pauses from thinking get cut. At the longer delay, it makes the system seem less responsive. It feels alright at something like 0.6s.
+
 There is no correct value. A system that takes drink orders and a system that listens to someone think out loud want very different thresholds, and the right one depends on what your users are doing with their pauses.
 
 ### The complete loop
@@ -171,7 +181,11 @@ Storyboard and/or use a Verplank diagram to design a speech-enabled device. (Stu
 
 Write out what you imagine the dialogue to be. Use cards, post-its, or whatever method helps you develop alternatives or group responses.
 
+<img width="2680" height="1856" alt="storyboard" src="https://github.com/user-attachments/assets/c19933be-5c47-4803-ac4c-4eca8cd17c5a" />
+
 \*\***Please describe and document your process.**\*\*
+
+Started with the third and fourth panel, added the other storyboard panels after acting out the dialogue (see below).
 
 Your script should include the pauses. Where does your device wait, and for how long? You now know from Part C that this is a parameter you have to choose, not something that happens for free.
 
@@ -181,6 +195,8 @@ Find a partner, and *without sharing the script with your partner* try out the d
 
 \*\***Describe if the dialogue seemed different than what you imagined when it was acted out, and how.**\*\*
 
+https://drive.google.com/file/d/11xLGpyX6bemGiX7sc_GrZWOWZzhhRvxC/view?usp=sharing
+The game needed some more explaining that I first imagined, so I will add a little introduction. Furthermore, I noticed that the user would sometimes think out loud ("Hmmm...", "Let me think..."), so we can't just take the first word given. Lastly, it makes it more clear when the sentence/story ends by having someone (the user or the device) saying "period", to mark the end of the sentence.
 
 ---
 
