@@ -301,6 +301,8 @@ flowchart LR
     E --> A
 ```
 
+Video: https://drive.google.com/file/d/1fIBj1dm2Pghn4KMKakPPFKlNwG-TUvuV/view?usp=sharing
+
 ## Test the system
 
 <details>
