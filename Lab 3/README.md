@@ -1,6 +1,11 @@
 # Chatterboxes
 
 **NAMES OF COLLABORATORS HERE**
+Got help from Alexa Yang
+
+
+<details>
+<summary>Lab overview</summary>
 
 [![Watch the video](https://user-images.githubusercontent.com/1128669/135009222-111fe522-e6ba-46ad-b6dc-d1633d21129c.png)](https://www.youtube.com/embed/Q8FWzLMobx0?start=19)
 
@@ -9,6 +14,11 @@ In this lab, we want you to design interaction with a speech-enabled device — 
 We will focus on **audio** as the main modality for interaction to start; these general techniques can be extended to **video**, **haptics** or other interactive mechanisms in the second part of the Lab.
 
 A note on what you are building with. Speech interfaces are usually taught as two boxes — speech-in, speech-out — and that framing hides the part that actually determines whether an interaction works. Between listening and speaking sits the question of **whose turn it is**: when does the device decide you have finished talking, and how long does it make you wait before it answers? This lab gives you direct control over both, and we will ask you to notice what changes when you move them.
+
+</details>
+
+<details>
+<summary>Prep for Part 1: Get the Latest Content and Pick up Additional Parts</summary>
 
 ## Prep for Part 1: Get the Latest Content and Pick up Additional Parts
 
@@ -34,9 +44,14 @@ pi@ixe00:~/Interactive-Lab-Hub $ git push
 
 Option 2: On your own GitHub repo, create a pull request to get updates from the class Interactive-Lab-Hub. After you have the latest updates online, go to your Pi, `cd` to your `Interactive-Lab-Hub` and use `git pull`.
 
+</details>
+
 ---
 
 # Part 1
+
+<details>
+<summary>Setup</summary>
 
 ## Setup
 
@@ -70,7 +85,12 @@ Then run the setup script, which installs the classic speech synthesizers, downl
 
 Check your audio devices before going further. `arecord -l` lists capture devices and `aplay -l` lists playback devices; if your webcam microphone or Bluetooth speaker does not appear, fix that first — every script below assumes the system defaults are the ones you want.
 
+</details>
+
 ## A. Text to Speech
+
+<details>
+<summary>Instructions</summary>
 
 Your Pi can speak in several quite different ways, and the differences are audible in a way that matters for design. In `speech-scripts/` there are shell scripts for each.
 
@@ -106,6 +126,8 @@ Note that the Piper command line changed in version 1.x — voices are now downl
 
 The demo script also shows `--output-raw`, which streams audio to the speaker as it is generated rather than writing a file first. Listen for the difference in how quickly speech begins. In a conversational system this gap is the thing your user experiences as responsiveness.
 
+</details>
+
 \*\***Write your own shell file to use your favorite of these TTS engines to have your Pi greet you by name.**\*\*
 (This shell file should be saved to your own repo for this lab.)
 
@@ -116,6 +138,9 @@ See greeting.sh
 The voices are the same greeting, but they feel different. The classic text to speech feels very robotic and old, since every word is uttered the same. However, the neural tts feels more natural, since it shapes the way it utters the words to the form of each sentence, making it feel more like a human speaking.
 
 ## B. Speech to Text
+
+<details>
+<summary>Instructions</summary>
 
 We use [faster-whisper](https://github.com/SYSTRAN/faster-whisper), a reimplementation of OpenAI's Whisper model that runs several times faster on CPU and does not require PyTorch. All processing happens on the Pi; nothing is sent to a server.
 
@@ -133,15 +158,27 @@ The transcript is not the interesting output here — the timings are. Run it ag
 
 Available sizes, smallest first: `tiny.en`, `base.en`, `small.en`, `medium.en`. The `.en` variants are English-only and faster than their multilingual counterparts at the same size.
 
+</details>
+
 \*\***Record a few seconds of your own speech (`arecord -d 5 -f cd -c 1 -r 16000 test.wav`) and transcribe it with at least two model sizes. Report the real-time factor for each. At what point does the accuracy improvement stop being worth the delay, for a system that has to answer you?**\*\*
 
 See test.wav. The real-time factor for tiny was 0.85, and the real-time factor for base was 1.36. From my current tests, even the tiny model was pretty accurate; however, later testing will show that the base model is definitely the best balance between delay and accuracy.
 
-\*\***Write your own script that verbally asks for a numerical input (a phone number, zipcode, number of pets) and records the answer the respondent provides.**\*\* Numbers are a good stress test — transcription systems make characteristic errors on digit strings, and you will want to know what they are before you design around them.
+\*\***Write your own script that verbally asks for a numerical input (a phone number, zipcode, number of pets) and records the answer the respondent provides.**\*\*
+
+<details>
+<summary>Instructions</summary>
+
+Numbers are a good stress test — transcription systems make characteristic errors on digit strings, and you will want to know what they are before you design around them.
+
+</details>
 
 See ask_number.py
 
 ## C. Turn-taking: knowing when someone has stopped talking
+
+<details>
+<summary>Instructions</summary>
 
 Everything so far has worked on fixed audio files. A real conversational device does not get told when to start and stop recording — it has to decide. This is the problem that makes speech interfaces hard, and it is mostly not a speech recognition problem.
 
@@ -159,9 +196,14 @@ Speak, pause, and watch it transcribe. Now change the endpointing threshold — 
 (.venv) $ python listen.py --min-silence 1.5
 ```
 
+</details>
+
 \*\***Try both extremes, and something in between. Describe what each one feels like to talk to. Note specifically: at 0.2s, what kinds of normal speech get cut off? At 1.5s, what does the delay make the system seem like?**\*\*
 
 At 0.2s, normal pauses in sentences and pauses from thinking get cut. At the longer delay, it makes the system seem less responsive. It feels alright at something like 0.6s.
+
+<details>
+<summary>Instructions</summary>
 
 There is no correct value. A system that takes drink orders and a system that listens to someone think out loud want very different thresholds, and the right one depends on what your users are doing with their pauses.
 
@@ -173,13 +215,22 @@ There is no correct value. A system that takes drink orders and a system that li
 (.venv) $ python echo_bot.py
 ```
 
+</details>
+
 ## D. Storyboard
+
+<details>
+<summary>Instructions</summary>
 
 Storyboard and/or use a Verplank diagram to design a speech-enabled device. (Stuck? Make a device that talks for dogs. If that is too stupid, find an application that is better than that.)
 
-\*\***Post your storyboard and diagram here.**\*\*
-
 Write out what you imagine the dialogue to be. Use cards, post-its, or whatever method helps you develop alternatives or group responses.
+
+Your script should include the pauses. Where does your device wait, and for how long? You now know from Part C that this is a parameter you have to choose, not something that happens for free.
+
+</details>
+
+\*\***Post your storyboard and diagram here.**\*\*
 
 <img width="2680" height="1856" alt="storyboard" src="https://github.com/user-attachments/assets/c19933be-5c47-4803-ac4c-4eca8cd17c5a" />
 
@@ -187,20 +238,26 @@ Write out what you imagine the dialogue to be. Use cards, post-its, or whatever 
 
 Started with the third and fourth panel, added the other storyboard panels after acting out the dialogue (see below).
 
-Your script should include the pauses. Where does your device wait, and for how long? You now know from Part C that this is a parameter you have to choose, not something that happens for free.
-
 ## E. Acting out the dialogue
 
+<details>
+<summary>Instructions</summary>
+
 Find a partner, and *without sharing the script with your partner* try out the dialogue you've designed, where you (as the device designer) act as the device you are designing. Please record this interaction (for example, using Zoom's record feature).
+
+</details>
 
 \*\***Describe if the dialogue seemed different than what you imagined when it was acted out, and how.**\*\*
 
 https://drive.google.com/file/d/11xLGpyX6bemGiX7sc_GrZWOWZzhhRvxC/view?usp=sharing
-The game needed some more explaining that I first imagined, so I will add a little introduction. Furthermore, I noticed that the user would sometimes think out loud ("Hmmm...", "Let me think..."), so we can't just take the first word given. Lastly, it makes it more clear when the sentence/story ends by having someone (the user or the device) saying "period", to mark the end of the sentence.
+The game needed some more explaining that I first imagined, so I will add a little introduction. Furthermore, I noticed that the user would sometimes think out loud ("Hmmm...", "Let me think..."), so we can't just take the first word given. Lastly, it makes it more clear when the sentence/story ends when the user says "period", to mark the end of the sentence.
 
 ---
 
 # Lab 3 Part 2
+
+<details>
+<summary>Instructions and prep for Part 2</summary>
 
 For Part 2, you will redesign the interaction with the speech-enabled device using the data collected, as well as feedback from part 1.
 
@@ -211,7 +268,12 @@ For Part 2, you will redesign the interaction with the speech-enabled device usi
 3. Make a new storyboard, diagram and/or script based on these reflections.
 4. (optional) Integrate [input devices](inputs.md) in the system
 
+</details>
+
 ## Prototype your system
+
+<details>
+<summary>Instructions</summary>
 
 The system should:
 * use the Raspberry Pi
@@ -222,23 +284,47 @@ The system should:
 
 *Include videos or screencaptures of both the system and the controller.*
 
+</details>
+
+### How the system works
+
+**Word Game Toy** is a small device that builds a sentence with you, one word at a time. You say a word, the toy adds the next one, and you keep taking turns until you say "period". The toy then reads the whole sentence back, reacts to it, and offers a new first word.
+
+**One turn, step by step**
+
+```mermaid
+flowchart LR
+    A[Player says a word] --> B[Silero VAD<br/>detects end of speech]
+    B --> C[Whisper<br/>transcribes it]
+    C --> D[Claude Opus 5<br/>picks toy's word]
+    D --> E[Piper TTS<br/>speaks the word]
+    E --> A
+```
+
 ## Test the system
+
+<details>
+<summary>Instructions</summary>
 
 Try to get at least two people to interact with your system. (Ideally, you would inform them that there is a wizard *after* the interaction, but we recognize that can be hard.)
 
 Answer the following:
 
+</details>
+
 ### What worked well about the system and what didn't?
-\*\**your answer here*\*\*
+Worked: Once it heard the word right, the toy kept the sentence grammatical and followed where I was going ("Yesterday I found out that my cat was secretly fighting crime"). The screen flashing each word + dots while thinking made it clear whose turn it was.
+
+Didn't: Short words like "the" and "I" kept failing at first (fixed by padding the audio with silence). Sounds out of turn like laughing or saying "what?" gets taken as a word. The toy sometimes takes a few seconds to answer.
 
 ### What worked well about the controller and what didn't?
-\*\**your answer here*\*\*
+No wizard, it's fully autonomous. The only controls are button A (start) and B (stop) so the simplicity helps user interaction.
 
 ### What lessons can you take away from the WoZ interactions for designing a more autonomous version of the system?
-\*\**your answer here*\*\*
+Acting out the dialogue showed the game needs a short intro explaining the rules, and that people think out loud ("Hmmm...", "Let me think..."), so the system can't just take the first thing it hears. Saying "period" also made it clear when the sentence ends. The autonomous version has the intro and "period", and uses the LLM to try to fix incorrect words from unintentional utterances.
 
 ### How could you use your system to create a dataset of interaction? What other sensing modalities would make sense to capture?
-\*\**your answer here*\*\*
+Log every turn: audio clip, what Whisper heard, the corrected word, the toy's word, and timing. That's a dataset of misheard single words and how people build sentences together. A camera would help catch laughing or confusion, and button presses could count as a frustration signal.
 
 <details>
   <summary><strong>Submission Cleanup Reminder (Click to Expand)</strong></summary>

@@ -24,3 +24,11 @@ piper-tts~=1.8
 flask~=3.1
 
 word2number
+# --- language model (Claude API) ---
+anthropic
+
+# --- MiniPiTFT screen and buttons ---
+adafruit-blinka~=8.64
+adafruit-circuitpython-rgb-display~=3.14
+lgpio~=0.2.2
+pillow~=11.3
