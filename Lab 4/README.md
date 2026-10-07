@@ -17,8 +17,8 @@
 ---
 
 ## Lab Overview
-Team: <canvas group name>  
-Members: Full Name (netid, github-handle), ...  
+Team: group 21  
+Members: Jovian Wang (jlw457, jovianw), Alexa Yang (ay482, alexa482), Elliot Kalt (esk226, elkalt)  
 Clock name: <name>
 
 
