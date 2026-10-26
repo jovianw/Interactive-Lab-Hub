@@ -136,6 +136,8 @@ pi@raspberrypi:~ $ ollama list
 
 \*\*\***Include a screenshot of `ollama list` showing your models.**\*\*\*
 
+<img width="449" height="60" alt="Screenshot 2026-10-25 at 9 14 20 PM" src="https://github.com/user-attachments/assets/dcb9a3df-324e-4ce2-a13c-fa3ad8c33363" />
+
 
 ## Part B. 
 ### See: recognize people in real time with YOLO
@@ -161,6 +163,18 @@ Then press q to quit and run it again with a flag. Each one changes a single thi
 
 \*\*\***Include a short video or screenshots of your experiments with the person detection. Write down three situations where it did not see you, or saw a person who was not there, and what you think the cause was.**\*\*\*
 
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 44 16 PM" src="https://github.com/user-attachments/assets/ddb102c8-138d-4e00-a984-32b14de1fe8c" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 43 33 PM" src="https://github.com/user-attachments/assets/0436cf55-b82e-4d3c-8464-86df8660c1f6" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 43 02 PM" src="https://github.com/user-attachments/assets/54e22c13-365f-44cb-97af-7fb334283933" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 42 36 PM" src="https://github.com/user-attachments/assets/7f4dbbc7-ddc4-4c38-80bf-9afe3eacf8da" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 41 59 PM" src="https://github.com/user-attachments/assets/109e87e9-cfdf-4d72-9237-9bf28a57890b" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 41 21 PM" src="https://github.com/user-attachments/assets/790b4c05-23f8-4654-b7b8-5b669a51c15c" />
+<img width="419" height="315" alt="Screenshot 2026-10-25 at 9 41 14 PM" src="https://github.com/user-attachments/assets/03ca7a64-9482-4059-9ba3-124e0faa1495" />
+
+Surprisingly it was very good at detecting where I was, even if I was facing different directions, in different poses, or partially out of frame. The challenges occurred when it saw other people-like things, such as a person on the phone, when my body is majorly blocked by some object like my laptop, or when the lighting is dark. I believe this is because:
+- It still sees people in the image, even if that person is actually 2d and on a screen
+- It is more unconfident when the person's shape is greatly blocked out by something, and
+- It needs enough lighting to differentiate between pixels of the person and pixels of the background.
 
 
 ## Part C. 
