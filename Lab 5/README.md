@@ -1,8 +1,8 @@
 # Observant Systems: Overnight Sensation
 
-**Team:**
+**Team:** group 21  
 
-**Members:** Full Name (netid, github-handle), ...
+**Members:** Jovian Wang (jlw457, jovianw), Alexa Yang (ay482, alexa482), Elliot Kalt (esk226, elkalt)
 
 **Project name:**
 
@@ -237,7 +237,29 @@ A 0.8B model is slow and sometimes wrong. It will invent events that are not in 
 \*\*\***Ask Qwen three questions to answer. Paste the questions, the answers and how long each took. Try one of them with `qwen3:0.6b` and compare.**\*\*\*
 
 <details>
-  Q&A here
+<summary>Q&A</summary>
+
+**Q1: Tell me a bit about the history of Roosevelt Island.** (qwen3.5:0.8b, 30.8 s, mostly loading the model)
+> Roosevelt Island was originally built as a military base during World War II, where it served as a staging area for American troops. Following the war, the island was repurposed by the United States government to house the nation's first presidential library and museum, which opened in 1946.
+
+0 out of 2 facts true lol.
+
+**Q2: Why did Cornell Tech move from Roosevelt Island to Brooklyn in 2020?** (qwen3.5:0.8b, 5.7 s)
+> Cornell Tech moved from Roosevelt Island to Brooklyn in 2020 to expand its operations and improve service accessibility for students and staff living on the island.
+
+Funny rick question, it never moved. The model just went along with it.
+
+**Q3 (`--json`): Someone was at the door at 3 am. Is that unusual?** (qwen3.5:0.8b, 4.6 s)
+```
+{ "headline": "Unusual: Someone at 3 AM", "unusual": true }
+```
+Correct, and good format.
+
+**Q1 again with qwen3:0.6b** (13.2 s)
+> Roosevelt Island was established in 1942 as a temporary refuge for the displaced and homeless, offering a safe haven for those in need. It was a symbol of the U.S. government's commitment to aiding the vulnerable, and it remains a significant historical site for the community. Today, it continues to serve as a vital community center, reflecting the enduring legacy of the nation's efforts to support those in need.
+
+Also seems made up, just more wordy. Both models seem bad at facts but fine at narrow yes/no stuff.
+
 </details>
 
 
