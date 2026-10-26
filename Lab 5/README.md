@@ -203,6 +203,10 @@ Consider how you might use this position based approach to create an interaction
 
 \*\*\***Include a screenshot or short video of the hand pose demo, and write how you might use face, hand or body pose tracking in your observant system.**\*\*\*
 
+<img width="644" height="322" alt="Screenshot 2026-10-24 at 9 42 28 PM" src="https://github.com/user-attachments/assets/69bda6d0-95d0-4090-aa6a-fd0a05dd6f4f" />
+
+We are currently considering an idea that uses a hand pose to trigger our overnight system. That is, in order to begin the sensing, the user has to complete a specific action or showcase a specific hand pose. We could use a similar idea to end the sensing. The device knows the night is over and the data should be compiled upon seeing the user's action or face again, which indicates they have woken up. 
+
 
 ## Part D. 
 ### Reason: run Qwen on the Pi with Ollama
