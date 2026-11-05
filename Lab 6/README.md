@@ -1,11 +1,11 @@
 # Distributed Interaction
 
-**NAMES OF COLLABORATORS HERE**
-Elliott Kalt (esk226), Jovian Wang (jlw457), Alexa Yang (ay482)
+**Team:** Elliott Kalt (esk226), Jovian Wang (jlw457), Alexa Yang (ay482)
 
-For submission, replace this section with your documentation!
+Our Part C project, **Spacecrew**, has its own write-up: [spaceteam/README.md](spaceteam/README.md).
 
----
+<details>
+<summary>Prep and overview (lab instructions)</summary>
 
 ## Prep
 
@@ -18,12 +18,17 @@ Build interactive systems where **multiple devices communicate over a network** 
 
 **Parts:**
 - A: Learn MQTT messaging
-- B: Try collaborative pixel grid demo  
+- B: Try collaborative pixel grid demo
 - C: Build your own distributed system
+
+</details>
 
 ---
 
 ## Part A: MQTT Messaging
+
+<details>
+<summary>Lab instructions</summary>
 
 MQTT = lightweight messaging for IoT. Publish/subscribe model with central broker.
 
@@ -57,15 +62,26 @@ mosquitto_pub -h farlab.infosci.cornell.edu -p 1883 -t 'IDD/test/yourname' -m 'H
 
 **🔧 Debug Tool:** View all MQTT messages in real-time at `http://farlab.infosci.cornell.edu:5001`
 
+MQTT agrees on almost nothing in advance: you invent the topics and what the messages mean. Smart-home standards like Matter fix the vocabulary instead (every "light" behaves the same). Keep this trade-off in mind when you design your topics in Part C.
+
+</details>
+
 ![MQTT Explorer showing messages](imgs/MQTT-explorer.png)
 
-**💡 Brainstorm 5 ideas for messaging between devices**
+**💡 5 ideas for messaging between devices**
 
-MQTT agrees on almost nothing in advance: you invent the topics and what the messages mean. Smart-home standards like Matter fix the vocabulary instead (every "light" behaves the same). Keep this trade-off in mind when you design your topics in Part C.
+1. A doorbell Pi publishes a ring and every screen in the house flashes who's at the door.
+2. Plant sensors publish soil moisture and one Pi by the sink shows which plant needs water.
+3. A "quiet hours" button publishes a topic that mutes every speaker on the network.
+4. Each roommate's Pi publishes whether they're home so the kitchen screen shows who to cook for.
+5. A shouting game where each Pi only sees someone else's task (what we built for Part C).
 
 ---
 
 ## Part B: Collaborative Pixel Grid
+
+<details>
+<summary>Lab instructions and setup</summary>
 
 Each Pi = one pixel, controlled by RGB sensor, displayed in real-time grid.
 
@@ -77,11 +93,10 @@ Each Pi = one pixel, controlled by RGB sensor, displayed in real-time grid.
 
 #### Light/Proximity/Gesture sensor (APDS-9960)
 We use this sensor [Adafruit APDS-9960](https://www.adafruit.com/product/3595) for this exmaple to detect light (also RGB)
- 
+
 <img src="https://cdn-shop.adafruit.com/970x728/3595-06.jpg" width=200>
 
 Connect it to your pi with Qwiic connector
-
 
 <img src="imgs/IMG_0270.jpg" height="200" />
 We need to use the screen to display the color detection, so we need to stop the running piscreen.service to make your screen available again
@@ -96,7 +111,7 @@ if you want to restart the screen service
 # start the screen service
 sudo systemctl start piscreen.service
 ```
- 
+
 2. **Server** (one person on laptop):
 ```bash
 cd "Lab 6"
@@ -126,7 +141,10 @@ Hold colored objects near sensor to change your pixel!
 
 ![Pixel grid with two devices](imgs/two-devices-grid.png)
 
-**📸 Include: Screenshot of grid + photo of your Pi setup**
+</details>
+
+**📸 Screenshot of grid + photo of our Pi setup**
+
 ![](imgs/image.jpg)
 ![](imgs/screenshot.png)
 
@@ -134,126 +152,17 @@ Hold colored objects near sensor to change your pixel!
 
 ## Part C: Spacecrew
 
-### 1. Project Description
+A Spaceteam-style shouting game for 2+ Pis. Each screen shows an order for
+someone else's sensors; you shout it while listening for your own. Full
+write-up (description, architecture, build, user testing, reflection):
+**[spaceteam/README.md](spaceteam/README.md)**.
 
-Spacecrew is a Spaceteam-inspired game for 2+ Raspberry Pis. Each player sees
-an instruction for someone else and must shout it while listening for their
-own tasks. Different sensors give each station unique controls, making
-communication essential. Rounds last two minutes; faster completion earns more
-points, expired tasks cost 15, and wrong button/touch actions cost 5. Survive
-with fewer than five errors to reach the next round; the fifth error destroys
-the ship and locks in your final cumulative score. Task deadlines start at 30
-seconds, decrease by 0.75 seconds per round, and stop at 15 seconds. Each screen
-shows just the instruction to shout, over a moving starfield, and below it a
-grid with the live state of that Pi's own sensors so players can see their
-input register. Task results flash as a green or red border on both the doer's
-and the caller's screen, with sound effects (CC0 clips from Freesound, credited
-in [spaceteam/sounds/CREDITS.md](spaceteam/sounds/CREDITS.md)). A launch
-animation opens each game, and every round flies the crew somewhere new with
-a titled challenge: Glitch (typos), Turbulence (shaking text), Nebula (fading
-text), Wormhole (mirrored text), Overload (two inputs at once, rare at first and
-then most tasks) and Warp Speed (half the time), each stronger in later rounds.
-Twice a round a hazard (asteroids, solar flare, ion storm or black hole) makes
-everyone alternate the A/B buttons. Surviving round 10 wins: a mission-complete
-animation plays and the crew returns to the lobby.
-During play, only instructions and task results are shown; timers and statistics
-are hidden. The final screen shows points and the round reached.
-During asteroid events, everyone alternates the two PiTFT buttons six times
-within two seconds after a warning. Press PiTFT A to ready up and play again.
-
-### 2. Architecture Diagram
-
-```mermaid
-flowchart LR
-    Sensors["Input: camera / joystick / button / touch / encoder / distance / color"]
-    Pi["Each Pi: detect devices and interpret sensor readings"]
-    Broker["MQTT broker: farlab.infosci.cornell.edu"]
-    Coordinator["Elected Pi: assign tasks, judge actions, calculate score and time"]
-    Screen["Output: each Mini PiTFT displays another player's task"]
-    Buttons["Input: PiTFT A/B buttons"]
-    Sensors -->|USB camera or Qwiic I2C| Pi
-    Buttons -->|GPIO23 / GPIO24| Pi
-    Pi -->|sensor values and button events| Broker
-    Broker --> Coordinator
-    Coordinator -->|game state| Broker
-    Broker --> Screen
-```
-
-Every Pi runs the same program; one automatically becomes coordinator.
-
-### 3. Build Documentation
-
-| Pi | Planned sensors and connections |
-| --- | --- |
-| A | USB webcam; Mini PiTFT on GPIO header |
-| B | Qwiic joystick, red button, MPR121 touch sensor (pads 0-11); Mini PiTFT |
-| C | Qwiic rotary encoder, distance/proximity sensor, color sensor; Mini PiTFT |
-
-Sensors are discovered at startup, so roles follow the connected hardware.
-**Photos of each Pi and its sensors**
-![](imgs/image2.png)
-
-Run on every Pi with I2C/SPI enabled and sensors connected:
-
-```bash
-cd "Lab 6"
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r spaceteam/requirements.txt
-# Camera Pi only:
-pip install -r spaceteam/requirements-camera.txt
-sudo systemctl stop piscreen.service
-python spaceteam/game.py
-```
-
-MQTT topics under `IDD/jovian21/spaceteam/v1`:
-
-- `presence/<station>`: detected controls, ready state, and device identity.
-- `input/<station>`: sensor readings and PiTFT button events.
-- `state`: assigned tasks, timer, score, and asteroid progress.
-
-In [hardware.py](spaceteam/hardware.py), the touched pad number becomes a game input:
-
-```python
-touched = [str(pad) for pad, value in enumerate(device.touched_pins) if value]
-return touched[0] if touched else 'released'
-```
-
-In [engine.py](spaceteam/engine.py), quicker actions earn more points:
-
-```python
-self.score += max(20, round(100 - 8 * (now - t['issued'])))
-```
-
-[game.py](spaceteam/game.py) handles MQTT, coordinator election, and display
-updates. Implementation assistance:
-OpenAI Codex.
-
-### 4. User Testing
-
-**Click to download video**
-[![](imgs/video-preview.jpg)](imgs/video-h264.mp4)
-
-- Before trying: record what each person expects the controls and instructions to do.
-- After trying: record what surprised them and what they would change.
-
-### 5. Reflection
-
-Physical play-testing is pending, so successful interactions and observed
-challenges have not yet been documented. Sensor events currently use named
-states; analog, color, and gesture targets must remain stable for 0.35 seconds.
-Color changes and analog transitions have no wrong-action penalty.
-
-Sensor interpretation happens on each Pi, including local MediaPipe camera
-tracking. Task assignment, timing, and scoring happen on the elected Pi to keep
-a single authoritative game state. No language model is used during play or setup.
-
-After play-testing, document what worked, distributed-interaction challenges,
-how reliably sensor events registered, and improvements suggested by users.
+[![Click to download video](imgs/video-preview.jpg)](imgs/video-h264.mp4)
 
 ---
 
-## Optional Stretch: Self-Describing Devices
+<details>
+<summary>Optional stretch: self-describing devices (not attempted)</summary>
 
 *For teams that finish early or want to try something harder. Not required.*
 
@@ -307,7 +216,10 @@ Then wire your real sensors and actuators to the topics in your descriptions (th
 - The rules the model produced, including at least one it got wrong
 - **How would a user notice that their devices had agreed on the wrong rule? How would they fix it?**
 
----
+</details>
+
+<details>
+<summary>Code files, debugging tools and troubleshooting (lab instructions)</summary>
 
 ## Code Files
 
@@ -326,8 +238,6 @@ Then wire your real sensors and actuators to the topics in your descriptions (th
 - `templates/controller.html` - Color picker
 - `templates/mqtt_viewer.html` - Message viewer
 
----
-
 ## Debugging Tools
 
 **MQTT Message Viewer:** `http://farlab.infosci.cornell.edu:5001`
@@ -341,8 +251,6 @@ Then wire your real sensors and actuators to the topics in your descriptions (th
 mosquitto_sub -h farlab.infosci.cornell.edu -p 1883 -t "IDD/#" -u idd -P "device@theFarm"
 ```
 
----
-
 ## Troubleshooting
 
 **MQTT:** Broker `farlab.infosci.cornell.edu:1883`, user `idd`, pass `device@theFarm`
@@ -353,21 +261,18 @@ mosquitto_sub -h farlab.infosci.cornell.edu -p 1883 -t "IDD/#" -u idd -P "device
 
 **Pi venv:** Make sure to activate: `source .venv/bin/activate`
 
+</details>
 
----
+<details>
+<summary>Submission checklist</summary>
 
-## Submission Checklist
+- [x] Prep/instructions collapsed above
+- [x] Project documentation: [spaceteam/README.md](spaceteam/README.md)
+- [x] Photos/videos/diagrams
+- [ ] User testing with non-team members (see the project README)
+- [x] Reflection on learnings
+- [x] Team names at top
 
-Before submitting:
-- [ ] Delete prep/instructions above
-- [ ] Add YOUR project documentation
-- [ ] Include photos/videos/diagrams  
-- [ ] Document user testing with non-team members
-- [ ] Add reflection on learnings
-- [ ] List team names at top
-
-**Your README = story of what YOU built!**
-
----
+</details>
 
 Resources: [MQTT Guide](https://www.hivemq.com/mqtt-essentials/) | [Paho Python](https://www.eclipse.org/paho/index.php?page=clients/python/docs/index.php) | [Flask-SocketIO](https://flask-socketio.readthedocs.io/)
