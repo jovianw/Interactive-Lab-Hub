@@ -17,7 +17,7 @@ PLACES = [('#071827', ('#20364f', '#35516d', '#52738b')),
 # Round that introduces each challenge: title and what it does
 CHALLENGES = {2: ('GLITCH', 'Typos in orders'), 3: ('TURBULENCE', 'Shaky text'),
               4: ('NEBULA', 'Fading text'), 5: ('WORMHOLE', 'Mirrored text'),
-              6: ('OVERLOAD', 'Two inputs at once'), 8: ('WARP SPEED', 'Half the time')}
+              6: ('OVERLOAD', 'Hold two inputs'), 8: ('WARP SPEED', 'Half the time')}
 HAZARD_COLORS = {'ASTEROIDS': '#5c1025', 'SOLAR FLARE': '#7a3a00',
                  'ION STORM': '#3b1060', 'BLACK HOLE': '#101010'}
 fonts = {}

@@ -22,8 +22,9 @@ task costs 15, a wrong button or pad costs 5, and five errors in a round loses
 the ship. Twice a round a hazard (asteroids, solar flare, ion storm or black
 hole) makes everyone mash A/B. Each round introduces a new challenge with a
 title card: Glitch (typos), Turbulence (shaking text), Nebula (fading text),
-Wormhole (mirrored text), Overload (two inputs at once) and Warp Speed (half
-the time). Survive round 10 to win.
+Wormhole (mirrored text), Overload (hold two inputs at the same time, like
+"HOLD BUTTON AND HOLD JOYSTICK LEFT") and Warp Speed (half the time). Survive
+round 10 to win.
 
 Feedback is a green or red border on both the doer's and the caller's screen,
 plus sound effects (CC0 clips from Freesound, credited in
@@ -78,8 +79,6 @@ Sensors are discovered at startup, so roles follow the connected hardware.
 
 - [visuals.py](visuals.py): draws the screen (instruction over the starfield, sensor cells, hazards, challenges).
 - [game.py](game.py): MQTT, coordinator election, sounds and the display loop.
-
-Implementation assistance: OpenAI Codex, Claude Code.
 
 <details>
 <summary>How to run</summary>
