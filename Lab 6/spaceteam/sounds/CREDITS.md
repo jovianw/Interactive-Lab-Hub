@@ -15,3 +15,4 @@ Each one is the Freesound preview, trimmed, converted to mono and level-matched.
 | `asteroid_hit.wav` | [Explosion.wav](https://freesound.org/people/Nbs%20Dark/sounds/94185/) | Nbs Dark |
 | `round_clear.wav` | [Win Spacey](https://freesound.org/people/GameAudio/sounds/220184/) | GameAudio |
 | `game_over.wav` | [Life Lost Game Over](https://freesound.org/people/noirenex/sounds/159408/) | noirenex |
+| `victory.wav` | [Level Up / Mission Complete](https://freesound.org/people/Beetlemuse/sounds/528958/) | Beetlemuse |

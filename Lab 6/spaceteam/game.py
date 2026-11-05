@@ -174,7 +174,11 @@ class Node:
                 self.game = None
                 self.ready = False
                 log.warning('Participant disconnected; return to lobby')
-        if (not self.game or self.game.finished) and now - self.started > 5:
+        # A won game shows its animation, then everyone is sent back to the lobby
+        if self.game and self.game.won and now - self.game.end > 10:
+            self.game = None
+            self.ready = False
+        if (not self.game or self.game.finished and not self.game.won) and now - self.started > 5:
             if len(players) >= self.args.min_players and all(d.get('ready') for d in players.values()):
                 self.game = Game(players, now)
                 self.heartbeat(now)
@@ -225,7 +229,7 @@ class Node:
         heard = (s['round'], feedback['id']) if feedback else None
         # Plays only game over when the ship is lost
         if phase == 'finished' and self.last_phase == 'playing':
-            play('game_over')
+            play('victory' if s['won'] else 'game_over')
         elif phase == 'playing':
             if level[0] == self.last_level[0] and level[1] > self.last_level[1]:
                 play('round_clear')
@@ -291,6 +295,10 @@ class Node:
         if phase == 'lobby':
             ready = sum(bool(p.get('ready')) for p in s['players'].values())
             self.display.show(['READY', f"{ready} / {len(s['players'])}"], cells, now)
+            return
+        if phase == 'finished' and s['won']:
+            self.display.show(['MISSION', 'COMPLETE', f"SCORE {s['score']}"], cells, now,
+                              level=int(now * 2), warp=4, ship=(now % 2.5) / 2.5)
             return
         if phase == 'finished':
             self.display.show(['SHIP LOST', f"SCORE {s['score']}", f"ROUND {s['level']}"], cells, now)

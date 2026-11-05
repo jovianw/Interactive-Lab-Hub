@@ -151,9 +151,11 @@ and the caller's screen, with sound effects (CC0 clips from Freesound, credited
 in [spaceteam/sounds/CREDITS.md](spaceteam/sounds/CREDITS.md)). A launch
 animation opens each game, and every round flies the crew somewhere new with
 a titled challenge: Glitch (typos), Turbulence (shaking text), Nebula (fading
-text) and Wormhole (mirrored text), each stronger in later rounds. Twice a round
-a hazard (asteroids, solar flare, ion storm or black hole) makes everyone
-alternate the A/B buttons.
+text), Wormhole (mirrored text), Overload (two inputs at once, rare at first and
+then most tasks) and Warp Speed (half the time), each stronger in later rounds.
+Twice a round a hazard (asteroids, solar flare, ion storm or black hole) makes
+everyone alternate the A/B buttons. Surviving round 10 wins: a mission-complete
+animation plays and the crew returns to the lobby.
 During play, only instructions and task results are shown; timers and statistics
 are hidden. The final screen shows points and the round reached.
 During asteroid events, everyone alternates the two PiTFT buttons six times

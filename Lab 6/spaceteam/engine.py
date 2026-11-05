@@ -10,18 +10,21 @@ CHOICES = {
     'distance': ['near', 'middle', 'far'],
     'color': ['red', 'green', 'blue'],
 }
+ROUNDS = 10  # Survive this many to win
+COMBO_ROUND = 6  # From here on, some tasks need two inputs at once
+FAST_ROUND = 8  # From here on, task time is halved
 
 
-def instruction(task):
+def describe(part):
     """Describe a physical action without fictional control names or hidden units."""
-    kind, value = task['kind'], task['value']
+    kind, value = part['kind'], part['value']
     if kind == 'encoder':
         direction = 'CLOCKWISE' if value > 0 else 'COUNTER CLOCKWISE'
         return f'TURN ENCODER {abs(value)} CLICKS {direction}'
     if kind == 'camera':
         return {'pinch': 'PINCH FINGERS AT CAMERA', 'open': 'OPEN HAND AT CAMERA'}[value]
     if kind == 'distance':
-        sensor = 'PROXIMITY SENSOR' if task['control'] == 'proximity' else 'DISTANCE SENSOR'
+        sensor = 'PROXIMITY SENSOR' if part['control'] == 'proximity' else 'DISTANCE SENSOR'
         return {'near': 'HAND CLOSE TO ', 'far': 'HAND AWAY FROM '}[value] + sensor
     if kind == 'color':
         return f'SHOW {value.upper()} TO COLOR SENSOR'
@@ -29,12 +32,15 @@ def instruction(task):
         return f'PUSH JOYSTICK {value.upper()}'
     if kind == 'touch':
         return f'TOUCH PAD {value}'
-    return {1: 'PRESS BUTTON', 2: 'PRESS BUTTON TWICE', 3: 'PRESS BUTTON 3 TIMES'}[task.get('repetitions', 1)]
+    return {1: 'PRESS BUTTON', 2: 'PRESS BUTTON TWICE', 3: 'PRESS BUTTON 3 TIMES'}[part.get('repetitions', 1)]
+
+
+def instruction(task):
+    return ' AND '.join(describe(part) for part in task['parts'])
 
 
 # Same alternate-A/B event, different name and background each time
 HAZARDS = ['ASTEROIDS', 'SOLAR FLARE', 'ION STORM', 'BLACK HOLE']
-
 
 
 class Game:
@@ -56,15 +62,20 @@ class Game:
         self.feedback_seq = 0
         self.asteroid = None
         self.asteroid_index = 0
-        self.finished = False
+        self.finished = self.won = False
         self.notice = 'GET READY'
         self.assign(now=self.start)
 
     @property
     def task_seconds(self):
-        return max(7.5, 20 - .75 * (self.level - 1))
+        seconds = max(7.5, 20 - .75 * (self.level - 1))
+        return seconds / 2 if self.level >= FAST_ROUND else seconds
 
     def next_round(self, now):
+        if self.level >= ROUNDS:
+            self.finished = self.won = True
+            self.notice = 'MISSION COMPLETE'
+            return
         self.level += 1
         self.round_errors = 0
         self.start = now + 4
@@ -85,35 +96,41 @@ class Game:
             caller = ids[(i + 1) % len(ids)]
             self.new_task(target, caller, now)
 
-    def new_task(self, target, caller, now):
-        controls = self.players[target]['controls']
-        previous = self.tasks.get(target)
+    def new_part(self, target, avoid_text=None, avoid_control=None):
         candidates = []
-        for control, kind in controls.items():
+        for control, kind in self.players[target]['controls'].items():
+            if control == avoid_control:
+                continue
             options = ['near', 'far'] if kind == 'distance' else CHOICES[kind]
-            # Even a station with only a button has two distinct actions.
+            # Even a station with only a button has distinct actions.
             repetitions = (1, 2, 3) if kind == 'button' else (1,)
             for value in options:
                 for count in repetitions:
                     candidate = dict(control=control, kind=kind, value=value, repetitions=count)
-                    if previous is None or instruction(candidate) != instruction(previous):
+                    if describe(candidate) != avoid_text:
                         candidates.append(candidate)
-        fresh = [t for t in candidates if t['kind'] == 'encoder'
-                 or t['value'] != self.readings.get((target, t['control']))]
+        fresh = [c for c in candidates if c['kind'] == 'encoder'
+                 or c['value'] != self.readings.get((target, c['control']))]
         # Picks the device first so twelve touch pads don't outweigh one button
         options = fresh or candidates
-        control = self.rng.choice(sorted({t['control'] for t in options}))
-        selected = self.rng.choice([t for t in options if t['control'] == control])
-        control, kind, value = selected['control'], selected['kind'], selected['value']
+        control = self.rng.choice(sorted({c['control'] for c in options}))
+        part = self.rng.choice([c for c in options if c['control'] == control])
         current = self.readings.get((target, control))
         # Encoder turns are measured from the first reading sent for this task
-        self.tasks[target] = dict(id=uuid.uuid4().hex, caller=caller, target=target,
-                                  control=control, kind=kind, value=value,
-                                  repetitions=selected['repetitions'], progress=0,
-                                  issued=now, deadline=now + self.task_seconds, origin=None,
-                                  armed=current is not None and current != value)
-        self.matches.pop(target, None)
+        part.update(progress=0, origin=None, done=None, armed=current is not None and current != part['value'])
+        return part
 
+    def new_task(self, target, caller, now):
+        previous = self.tasks.get(target)
+        parts = [self.new_part(target, avoid_text=previous and describe(previous['parts'][0]))]
+        # Both hands: rare at first, then most tasks
+        chance = min(.8, .2 * (self.level - COMBO_ROUND + 1))
+        if len(self.players[target]['controls']) > 1 and self.rng.random() < chance:
+            parts.append(self.new_part(target, avoid_control=parts[0]['control']))
+        seconds = self.task_seconds * (1.5 if len(parts) > 1 else 1)
+        self.tasks[target] = dict(id=uuid.uuid4().hex, caller=caller, target=target, parts=parts,
+                                  issued=now, deadline=now + seconds)
+        self.matches = {k: v for k, v in self.matches.items() if k[0] != target}
 
     def report(self, target, now, success=False):
         # Shown to the doer and the caller; target None means the whole crew
@@ -128,51 +145,61 @@ class Game:
         if self.finished or now < self.start or now >= self.end or self.asteroid:
             return
         t = self.tasks.get(player)
-        if not t or now < t['issued']:
+        if not t or now < t['issued'] or now >= t['deadline']:
             return
-        if now >= t['deadline']:
-            return
-        if control != t['control']:
-            kind = self.players[player]['controls'].get(control)
-            if kind in ('button', 'touch') and value not in (None, 'released') and value != previous:
+        # Only explicit button/touch actions are penalized. Analog travel,
+        # uncertain camera detections and color changes are free.
+        pressed = value not in (None, 'released') and value != previous
+        part = next((p for p in t['parts'] if p['control'] == control), None)
+        if part is None:
+            if self.players[player]['controls'].get(control) in ('button', 'touch') and pressed:
                 self.penalty('WRONG ACTION -5', 5)
                 self.report(player, now)
             return
-        if t['kind'] == 'encoder':
+        if part['kind'] == 'encoder':
             if not isinstance(value, int) or isinstance(value, bool):
                 return
-            if t['origin'] is None:
-                t['origin'] = value
-            delta = value - t['origin']
-            matched = delta >= t['value'] if t['value'] > 0 else delta <= t['value']
-            t['armed'] = True
+            if part['origin'] is None:
+                part['origin'] = value
+            delta = value - part['origin']
+            matched = delta >= part['value'] if part['value'] > 0 else delta <= part['value']
+            part['armed'] = True
         else:
-            matched = value == t['value']
+            matched = value == part['value']
         if not matched:
-            t['armed'] = True
-            self.matches.pop(player, None)
-            # Only explicit button/touch actions are penalized. Analog travel,
-            # uncertain camera detections and color changes are free.
-            if t['kind'] in ('button', 'touch') and value not in (None, 'released') and value != previous:
+            part['armed'] = True
+            self.matches.pop((player, control), None)
+            if part['kind'] in ('button', 'touch') and pressed:
                 self.penalty('WRONG ACTION -5', 5)
                 self.report(player, now)
             return
-        if not t['armed']:
+        if not part['armed']:
             return
-        since = self.matches.setdefault(player, now)
-        hold = 0 if t['kind'] in ('button', 'touch', 'encoder') else 0.35
-        if now - since >= hold:
-            if t['kind'] in ('button', 'touch'):
-                t['progress'] += 1
-                if t['progress'] < t['repetitions']:
-                    t['armed'] = False
-                    self.matches.pop(player, None)
-                    return
-            self.score += max(20, round(100 - 8 * (now - t['issued'])))
-            self.completed += 1
-            self.notice = 'TASK COMPLETE!'
-            self.report(player, now, success=True)
-            self.new_task(player, t['caller'], now)
+        since = self.matches.setdefault((player, control), now)
+        hold = 0 if part['kind'] in ('button', 'touch', 'encoder') else 0.35
+        if now - since < hold:
+            return
+        if part['kind'] in ('button', 'touch'):
+            part['progress'] += 1
+            part['armed'] = False
+            self.matches.pop((player, control), None)
+            if part['progress'] < part['repetitions']:
+                return
+        part['done'] = now
+        done = [p['done'] for p in t['parts']]
+        if None in done:
+            return
+        if max(done) - min(done) > 1.5:
+            # Not at the same time: the earlier input must be redone
+            for p in t['parts']:
+                if p['done'] < max(done):
+                    p.update(done=None, progress=0, origin=None)
+            return
+        self.score += max(20, round(100 - 8 * (now - t['issued'])))
+        self.completed += 1
+        self.notice = 'TASK COMPLETE!'
+        self.report(player, now, success=True)
+        self.new_task(player, t['caller'], now)
 
     def action(self, player, button, now):
         a = self.asteroid
@@ -227,9 +254,9 @@ class Game:
                 for t in self.tasks.values():
                     t['issued'] += pause
                     t['deadline'] += pause
-                    if t['kind'] == 'encoder':
-                        t['origin'] = None
-                    t['armed'] = self.readings.get((t['target'], t['control'])) != t['value']
+                    for p in t['parts']:
+                        p.update(origin=None, done=None,
+                                 armed=self.readings.get((t['target'], p['control'])) != p['value'])
                 self.matches.clear()
                 self.asteroid = None
             return
@@ -244,7 +271,7 @@ class Game:
             return
 
     def snapshot(self, now):
-        return dict(round=self.id, phase='finished' if self.finished else 'playing',
+        return dict(round=self.id, phase='finished' if self.finished else 'playing', won=self.won,
                     remaining=max(0, min(self.duration, self.end - now)), countdown=max(0, self.start - now),
                     score=self.score, completed=self.completed, mistakes=self.mistakes,
                     players=self.players, tasks=self.tasks, asteroid=self.asteroid,
