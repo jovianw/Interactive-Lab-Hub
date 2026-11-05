@@ -126,6 +126,8 @@ Hold colored objects near sensor to change your pixel!
 ![Pixel grid with two devices](imgs/two-devices-grid.png)
 
 **📸 Include: Screenshot of grid + photo of your Pi setup**
+![](imgs/image.jpg)
+![](imgs/screenshot.png)
 
 ---
 
