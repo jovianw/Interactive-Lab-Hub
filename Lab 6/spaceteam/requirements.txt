@@ -1,0 +1,12 @@
+# Base game + every supported I2C control + Mini PiTFT.
+paho-mqtt>=1.6.1,<2
+Pillow>=10
+Adafruit-Blinka
+adafruit-circuitpython-rgb-display
+adafruit-circuitpython-seesaw
+adafruit-circuitpython-apds9960
+adafruit-circuitpython-mpr121
+sparkfun-qwiic-joystick
+sparkfun-qwiic-button
+sparkfun-qwiic-proximity
+sparkfun-qwiic-vl53l1x

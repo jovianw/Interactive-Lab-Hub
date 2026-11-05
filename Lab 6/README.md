@@ -1,6 +1,7 @@
 # Distributed Interaction
 
 **NAMES OF COLLABORATORS HERE**
+Elliott Kalt (esk226), Jovian Wang (jlw457), Alexa Yang (ay482)
 
 For submission, replace this section with your documentation!
 
@@ -131,63 +132,122 @@ Hold colored objects near sensor to change your pixel!
 
 ---
 
-## Part C: Make Your Own
+## Part C: Spacecrew
 
-**Requirements:**
-- 3+ people, 3+ Pis
-- Each Pi contributes sensor input via MQTT
-- Meaningful or fun interaction
+### 1. Project Description
 
-**Ideas:**
+Spacecrew is a Spaceteam-inspired game for 2+ Raspberry Pis. Each player sees
+an instruction for someone else and must shout it while listening for their
+own tasks. Different sensors give each station unique controls, making
+communication essential. Rounds last two minutes; faster completion earns more
+points, expired tasks cost 15, and wrong button/touch actions cost 5. Survive
+with fewer than five errors to reach the next round; the fifth error destroys
+the ship and locks in your final cumulative score. Task deadlines start at 30
+seconds, decrease by 0.75 seconds per round, and stop at 15 seconds. Each screen
+shows just the instruction to shout, over a moving starfield, and below it a
+grid with the live state of that Pi's own sensors so players can see their
+input register. Task results flash as a green or red border on both the doer's
+and the caller's screen, with sound effects (CC0 clips from Freesound, credited
+in [spaceteam/sounds/CREDITS.md](spaceteam/sounds/CREDITS.md)). A launch
+animation opens each game, and every round flies the crew somewhere new with
+a titled challenge: Glitch (typos), Turbulence (shaking text), Nebula (fading
+text) and Wormhole (mirrored text), each stronger in later rounds. Twice a round
+a hazard (asteroids, solar flare, ion storm or black hole) makes everyone
+alternate the A/B buttons.
+During play, only instructions and task results are shown; timers and statistics
+are hidden. The final screen shows points and the round reached.
+During asteroid events, everyone alternates the two PiTFT buttons six times
+within two seconds after a warning. Press PiTFT A to ready up and play again.
 
-**Sensor Fortune Teller**
-- Each Pi sends 0-255 from different sensor
-- Server generates fortunes from combined values
+### 2. Architecture Diagram
 
-**Frankenstories**
-- Sensor events → story elements (not text!)
-- Red = danger, gesture up = climbed, distance <10cm = suddenly
+```mermaid
+flowchart LR
+    Sensors["Input: camera / joystick / button / touch / encoder / distance / color"]
+    Pi["Each Pi: detect devices and interpret sensor readings"]
+    Broker["MQTT broker: farlab.infosci.cornell.edu"]
+    Coordinator["Elected Pi: assign tasks, judge actions, calculate score and time"]
+    Screen["Output: each Mini PiTFT displays another player's task"]
+    Buttons["Input: PiTFT A/B buttons"]
+    Sensors -->|USB camera or Qwiic I2C| Pi
+    Buttons -->|GPIO23 / GPIO24| Pi
+    Pi -->|sensor values and button events| Broker
+    Broker --> Coordinator
+    Coordinator -->|game state| Broker
+    Broker --> Screen
+```
 
-**Distributed Instrument**
-- Each Pi = one musical parameter
-- Only works together
+Every Pi runs the same program; one automatically becomes coordinator.
 
-**The Listening Room**
-- One Pi runs Ollama and subscribes to the others' sensor topics
-- Every minute it describes the room's "mood" in a sentence and publishes it
-- Other Pis turn that sentence into light or sound
+### 3. Build Documentation
 
-**Others:** Games, presence display, mood ring
+| Pi | Planned sensors and connections |
+| --- | --- |
+| A | USB webcam; Mini PiTFT on GPIO header |
+| B | Qwiic joystick, red button, MPR121 touch sensor (pads 0-11); Mini PiTFT |
+| C | Qwiic rotary encoder, distance/proximity sensor, color sensor; Mini PiTFT |
 
-### Deliverables
+Sensors are discovered at startup, so roles follow the connected hardware.
+**Photos of each Pi and its sensors**
+![](imgs/image2.png)
 
-Replace this README with your documentation:
+Run on every Pi with I2C/SPI enabled and sensors connected:
 
-**1. Project Description**
-- What does it do? Why interesting? User experience?
+```bash
+cd "Lab 6"
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r spaceteam/requirements.txt
+# Camera Pi only:
+pip install -r spaceteam/requirements-camera.txt
+sudo systemctl stop piscreen.service
+python spaceteam/game.py
+```
 
-**2. Architecture Diagram**
-- Hardware, connections, data flow
-- Label input/computation/output
+MQTT topics under `IDD/jovian21/spaceteam/v1`:
 
-**3. Build Documentation**
-- Photos of each Pi + sensors
-- MQTT topics used
-- Code snippets with explanations
+- `presence/<station>`: detected controls, ready state, and device identity.
+- `input/<station>`: sensor readings and PiTFT button events.
+- `state`: assigned tasks, timer, score, and asteroid progress.
 
-**4. User Testing**
-- **Test with 2+ people NOT on your team**
-- Photos/video of use
-- What did they think before trying?
-- What surprised them?
-- What would they change?
+In [hardware.py](spaceteam/hardware.py), the touched pad number becomes a game input:
 
-**5. Reflection**
-- What worked well?
-- Challenges with distributed interaction?
-- How did sensor events work?
-- What would you improve?
-- Where did computation happen in your system, and why there? (If you used a language model: did it run on every event, or only at setup?)
+```python
+touched = [str(pad) for pad, value in enumerate(device.touched_pins) if value]
+return touched[0] if touched else 'released'
+```
+
+In [engine.py](spaceteam/engine.py), quicker actions earn more points:
+
+```python
+self.score += max(20, round(100 - 8 * (now - t['issued'])))
+```
+
+[game.py](spaceteam/game.py) handles MQTT, coordinator election, and display
+updates. Implementation assistance:
+OpenAI Codex.
+
+### 4. User Testing
+
+**Click to download video**
+[![](imgs/video-preview.jpg)](imgs/video-h264.mp4)
+
+- Before trying: record what each person expects the controls and instructions to do.
+- After trying: record what surprised them and what they would change.
+
+### 5. Reflection
+
+Physical play-testing is pending, so successful interactions and observed
+challenges have not yet been documented. Sensor events currently use named
+states; analog, color, and gesture targets must remain stable for 0.35 seconds.
+Color changes and analog transitions have no wrong-action penalty.
+
+Sensor interpretation happens on each Pi, including local MediaPipe camera
+tracking. Task assignment, timing, and scoring happen on the elected Pi to keep
+a single authoritative game state. No language model is used during play or setup.
+
+After play-testing, document what worked, distributed-interaction challenges,
+how reliably sensor events registered, and improvements suggested by users.
 
 ---
 

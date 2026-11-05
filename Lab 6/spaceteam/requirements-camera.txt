@@ -1,0 +1,3 @@
+# Same versions as Lab 5: preserves the MediaPipe solutions.hands API.
+mediapipe==0.10.18
+opencv-python==4.11.0.86
